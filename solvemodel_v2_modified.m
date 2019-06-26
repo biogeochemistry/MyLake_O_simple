@@ -15,7 +15,7 @@
 % New DIC variable 29.12.2010 (incl. inflow, convection, diffusion) by PK
 % New O2 variable 10.2.2011 by PK
 
-function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,Attn_zt,PARzt,...
+function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,Attn_zt,PARzt,PARMaxt,...
         P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
         CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t,...
          sediment_results] = ...
@@ -77,6 +77,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 %       DoF, DoM    : Days of freezing and melting (model timestep number)
 %       MixStat     : Temporary variables used in model testing, see code (N * tt)
 %       PARzt       : Predicted PAR irradiance (400-700nm) down to depth z (tt*zz)(umol*m-2*s-1)
+%       PARMaxt     : Predicted PAR irradiance (400-700nm) at surface (tt)(umol*m-2*s-1)
 
 % Fokema outputs
 %       CDOMzt      : Coloured dissolved organic matter absorption m-1
@@ -287,6 +288,7 @@ O2_sat_abst = zeros(Nz,length(tt));
 Qzt_sed = zeros(Nz,length(tt));
 lambdazt = zeros(Nz,length(tt));
 PARzt = zeros(Nz,length(tt));
+PARMaxt=zeros(1,length(tt));
 Attn_zt = zeros(Nz, length(tt));
 P3zt_sed = zeros(Nz,length(tt),4); %3-D
 P3zt_sed_sc = zeros(Nz,length(tt),3); %3-D
@@ -648,6 +650,7 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
             Qsw  * exp(-lambdaz_wtot_avg .* zz); 
     else PAR_z=zeros(Nz,1); %DayFrac==0, polar night
     end
+    
     % =====   
     
     U_sw_z=PAR_z./PAR_sat; %scaled irradiance at levels zz                                                             
@@ -1582,6 +1585,8 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
     Qzt_sed(:,i) = Qz_sed./(60*60*24*dt); %(J m-2 day-1) -> (W m-2)
     lambdazt(:,i) = lambdaz_wtot_avg;
     PARzt(:,i) = PAR_z *1000000; % PAR_z (mol/m2/s)
+    parmax = ((3/2) / (e_par * DayFrac)) * f_par * Qsw;  
+    PARMaxt(:,i)= parmax;
 	Attn_zt(:, i) = Attn_z;
     
     surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
