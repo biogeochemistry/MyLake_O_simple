@@ -1585,7 +1585,7 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
     Qzt_sed(:,i) = Qz_sed./(60*60*24*dt); %(J m-2 day-1) -> (W m-2)
     lambdazt(:,i) = lambdaz_wtot_avg;
     PARzt(:,i) = PAR_z *1000000; % PAR_z (mol/m2/s)
-    parmax = ((3/2) / (e_par * DayFrac)) * f_par * Qsw;  
+    parmax = (((3/2) / (e_par * DayFrac)) * f_par * Qsw)*1000000;  
     PARMaxt(:,i)= parmax;
 	Attn_zt(:, i) = Attn_z;
     
