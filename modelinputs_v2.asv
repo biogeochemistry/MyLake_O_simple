@@ -174,7 +174,7 @@ if(start_line == 0 )
     error('M_start is not in the input timeserie, Simulation period starts earlier than the Input data')
 end
 if(end_line == 0)
-    error('M_stop is not in the input timeserie, Simulation period finishes later than the Input data')
+    error('M_stop is not in the input timeserie, Simulation period starts earlier than the Input data')
 end
 
 In_Date=InputMx(start_line:end_line,1:3); 
